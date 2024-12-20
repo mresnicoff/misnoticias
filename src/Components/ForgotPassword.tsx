@@ -98,7 +98,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = () => {
       mx="auto" 
       my={10}
     ><form onSubmit={handleSubmit}>
-      <VStack spacing={4} align="stretch" as="form">
+      <VStack spacing={4} align="stretch">
         <FormControl id="email" isRequired isInvalid={!!errors.email}>
           <FormLabel color={textColor}>Correo Electrónico</FormLabel>
           <Input 

@@ -216,7 +216,7 @@ const RegisterForm: React.FC = () => {
       my={10}
     >
       <form onSubmit={handleSubmit}>
-      <VStack spacing={4} align="stretch" as="form" >
+      <VStack spacing={4} align="stretch" >
         <FormControl id="nombre" isRequired isInvalid={!!showError('nombre')}>
           <FormLabel color={textColor}>Nombre</FormLabel>
           <Input 

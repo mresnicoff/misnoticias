@@ -176,7 +176,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = () => {
       my={10}
     >
       <form onSubmit={handleSubmit}>
-      <VStack spacing={4} align="stretch" as="form" >
+      <VStack spacing={4} align="stretch" >
         <FormControl id="password" isRequired isInvalid={!!errors.password && touched.password}>
           <FormLabel color={textColor}>Contraseña</FormLabel>
           <Input 
