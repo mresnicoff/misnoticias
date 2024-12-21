@@ -14,7 +14,7 @@ import ResetPasswordForm from "../Components/ResetPassword";
 
 const routes: RouteObject[] = [
   {
-    path: "/",
+    path: "/misnoticias/<",
     element: <LayoutPublic />,
     children: [
       {
@@ -22,12 +22,12 @@ const routes: RouteObject[] = [
         element: <App />,
       },
       {
-        path: "/notas",
+        path: "/misnoticias/notas",
         element: <MostrarNotas />,
       },
       // Envolvemos la ruta "redactar" con ProtectedRoute
       {
-        path: "/redactar",
+        path: "/misnoticias/redactar",
         element: (
           <ProtectedRoute>
             <Form />
@@ -35,31 +35,31 @@ const routes: RouteObject[] = [
         ),
       },
       {
-        path: "/loguearse",
+        path: "/misnoticias/loguearse",
         element: <LoginForm/>,
       },
       {
-        path: "/logout",
+        path: "/misnoticias/logout",
         element: <Logout/>,
       },
       {
-        path: "/forgot-password",
+        path: "/misnoticias/forgot-password",
         element: <ForgotPasswordForm/>,
       },
       {
-      path: "/reset-password",
+      path: "/misnoticias/reset-password",
       element: <ResetPasswordForm/>,
     },
       {
-        path: "/registrarse",
+        path: "/misnoticias/registrarse",
         element: <RegisterForm/>,
       },
       {
-        path: "/noticia/:id",
+        path: "/misnoticias/noticia/:id",
         element: <NoticiaDetalle />,
       },
       {
-        path: "/buscar",
+        path: "/misnoticias/buscar",
         element: <SearchForm />,
       },
     ],
