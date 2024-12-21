@@ -34,7 +34,7 @@ const Header: React.FC = () => {
     newSearchParams.delete('author');
     newSearchParams.delete('keywords');
     setSearchParams(newSearchParams); // Esto limpia todos los parámetros de búsqueda en la URL actualde búsqueda
-    navigate("/notas")
+    navigate("misnoticias/notas")
   };
 
   
@@ -57,12 +57,12 @@ const Header: React.FC = () => {
       return (
         <>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/redactar" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="misnoticias/redactar" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Subir Nota
             </ChakraLink>
           </Box>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/logout" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="misnoticias/logout" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Log Out
             </ChakraLink>
           </Box>
@@ -73,12 +73,12 @@ const Header: React.FC = () => {
       return (
         <>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/loguearse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="misnoticias/loguearse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Login
             </ChakraLink>
           </Box>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/registrarse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="misnoticias/registrarse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Registrarse
             </ChakraLink>
           </Box>
