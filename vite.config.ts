@@ -5,5 +5,5 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   outDir: 'dist', 
-base:"https://mresnicoff.github.io/",
+base:"/misnoticias/",
 });
