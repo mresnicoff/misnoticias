@@ -15,7 +15,7 @@ function Logout() {
   }, [logout]);
 
   if (redirect) {
-    return <Navigate to="/misnoticias/" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <div>Cerrando sesión...</div>;

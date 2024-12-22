@@ -35,7 +35,7 @@ const Header: React.FC = () => {
     newSearchParams.delete('author');
     newSearchParams.delete('keywords');
     setSearchParams(newSearchParams); // Esto limpia todos los parámetros de búsqueda en la URL actual
-    navigate("/misnoticias/notas");
+    navigate("/notas");
   };
 
   // Colores basados en el modo claro/oscuro
@@ -57,12 +57,12 @@ const Header: React.FC = () => {
       return (
         <>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/misnoticias/redactar" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/redactar" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Subir Nota
             </ChakraLink>
           </Box>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/misnoticias/logout" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/logout" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Log Out
             </ChakraLink>
           </Box>
@@ -73,12 +73,12 @@ const Header: React.FC = () => {
       return (
         <>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/misnoticias/loguearse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/loguearse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Login
             </ChakraLink>
           </Box>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="/misnoticias/registrarse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/registrarse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Registrarse
             </ChakraLink>
           </Box>
@@ -91,7 +91,7 @@ const Header: React.FC = () => {
     <Box as="header" bg={bgColor} color={textColor} p={4} boxShadow="md" width="100%" position="relative" zIndex="1">
       <Flex width="100%" align="center" justify="space-between" px={4}>
         <Flex width="80%" mx="auto" align="center">
-          <ChakraLink as={ReactRouterLink} to="/misnoticias/notas" _hover={{ textDecoration: 'none' }}>
+          <ChakraLink as={ReactRouterLink} to="/notas" _hover={{ textDecoration: 'none' }}>
             <Text fontSize="2xl" fontWeight="bold">
               <Text as="span" color="yellow.300">Mis</Text> Noticias
             </Text>
@@ -121,10 +121,10 @@ const Header: React.FC = () => {
                   <DrawerHeader color={textColor}>Menú</DrawerHeader>
                   <DrawerBody>
                     <VStack spacing={4} align="stretch">
-                      <ChakraLink as={ReactRouterLink} to="/misnoticias/redactar" color={textColor} _hover={{ color: "yellow.300" }}>
+                      <ChakraLink as={ReactRouterLink} to="/redactar" color={textColor} _hover={{ color: "yellow.300" }}>
                         Subir nota
                       </ChakraLink>
-                      <ChakraLink as={ReactRouterLink} to="/misnoticias/notas" color={textColor} _hover={{ color: "yellow.300" }}>
+                      <ChakraLink as={ReactRouterLink} to="/notas" color={textColor} _hover={{ color: "yellow.300" }}>
                         Ver notas
                       </ChakraLink>
                       {renderAuthLinks()}
@@ -138,13 +138,13 @@ const Header: React.FC = () => {
             <Flex as="nav" align="center" ml="auto">
               <Flex as="ul" listStyleType="none" p={0} m={0} gap={4}>
                 <Box as="li">
-                  <ChakraLink as={ReactRouterLink} to="/misnoticias/notas" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+                  <ChakraLink as={ReactRouterLink} to="/notas" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
                     Ver notas
                   </ChakraLink>
                 </Box>
                 {renderAuthLinks()}
                 <Box as="li">
-                  <ChakraLink as={ReactRouterLink} to="/misnoticias/buscar">
+                  <ChakraLink as={ReactRouterLink} to="/buscar">
                     <IconButton 
                       aria-label="Buscar" 
                       icon={<SearchIcon />} 

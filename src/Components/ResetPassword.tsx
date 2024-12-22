@@ -139,7 +139,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate('/misnoticias/loguearse'); // Redirige al usuario al login
+        navigate('/loguearse'); // Redirige al usuario al login
       } catch (error) {
         toast({
           title: "Error",

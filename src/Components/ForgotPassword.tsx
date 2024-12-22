@@ -121,7 +121,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = () => {
         </Button>
 
         <Text align="center" fontSize="sm" color={textColor}>
-          <a href="/misnoticias/loguearse" style={{ color: linkColor }}>Volver al inicio de sesión</a>
+          <a href="/loguearse" style={{ color: linkColor }}>Volver al inicio de sesión</a>
         </Text>
       </VStack>
       </form>

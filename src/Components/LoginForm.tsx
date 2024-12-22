@@ -98,7 +98,7 @@ console.log("hola")
         });
         login(user.email)
         console.log(user.email)
-        navigate('/misnoticias/');
+        navigate('/');
       } else {
         toast({
           title: "Error",
@@ -171,12 +171,12 @@ console.log("hola")
         </Button>
 
         <Text align="center" fontSize="sm" color={textColor}>
-          <Link as={RouterLink} to="/misnoticias/forgot-password" color={linkColor}>
+          <Link as={RouterLink} to="/forgot-password" color={linkColor}>
             ¿Olvidó su contraseña?
           </Link>
         </Text>
         <Text align="center" fontSize="sm" color={textColor}>
-          <Link as={RouterLink} to="/misnoticias/registrarse" color={linkColor}>
+          <Link as={RouterLink} to="/registrarse" color={linkColor}>
             No tiene cuenta, regístrese
           </Link>
         </Text>

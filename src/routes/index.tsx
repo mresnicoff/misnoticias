@@ -15,7 +15,7 @@ import Error404 from "../Components/Error404";
 
 const routes: RouteObject[] = [
   {
-    path: "/misnoticias",
+    path: "/",
     element: <LayoutPublic />,
     children: [
       {
@@ -71,4 +71,6 @@ const routes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter(routes);
+export const router = createBrowserRouter(routes, {
+  basename: "/misnoticias"
+});
