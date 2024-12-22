@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from '../auth/authContext';
 import { FaFilterCircleXmark } from 'react-icons/fa6';
 import { 
@@ -26,6 +26,7 @@ const Header: React.FC = () => {
   let navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { loggedUser, filtersActive, setFiltersActive } = useAuthContext();
+  
   const clearFilters = () => {
     setFiltersActive(); // Desactiva el estado de filtros
     const newSearchParams = new URLSearchParams(searchParams);
@@ -33,11 +34,10 @@ const Header: React.FC = () => {
     newSearchParams.delete('category');
     newSearchParams.delete('author');
     newSearchParams.delete('keywords');
-    setSearchParams(newSearchParams); // Esto limpia todos los parámetros de búsqueda en la URL actualde búsqueda
-    navigate("misnoticias/notas")
+    setSearchParams(newSearchParams); // Esto limpia todos los parámetros de búsqueda en la URL actual
+    navigate("/misnoticias/notas");
   };
 
-  
   // Colores basados en el modo claro/oscuro
   const bgColor = useColorModeValue("purple.500", "purple.800");
   const textColor = useColorModeValue("white", "gray.200");
@@ -57,12 +57,12 @@ const Header: React.FC = () => {
       return (
         <>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="misnoticias/redactar" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/misnoticias/redactar" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Subir Nota
             </ChakraLink>
           </Box>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="misnoticias/logout" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/misnoticias/logout" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Log Out
             </ChakraLink>
           </Box>
@@ -73,12 +73,12 @@ const Header: React.FC = () => {
       return (
         <>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="misnoticias/loguearse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/misnoticias/loguearse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Login
             </ChakraLink>
           </Box>
           <Box as="li">
-            <ChakraLink as={ReactRouterLink} to="misnoticias/registrarse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+            <ChakraLink as={ReactRouterLink} to="/misnoticias/registrarse" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
               Registrarse
             </ChakraLink>
           </Box>
@@ -91,7 +91,7 @@ const Header: React.FC = () => {
     <Box as="header" bg={bgColor} color={textColor} p={4} boxShadow="md" width="100%" position="relative" zIndex="1">
       <Flex width="100%" align="center" justify="space-between" px={4}>
         <Flex width="80%" mx="auto" align="center">
-          <ChakraLink as={ReactRouterLink} to="/" _hover={{ textDecoration: 'none' }}>
+          <ChakraLink as={ReactRouterLink} to="/misnoticias/notas" _hover={{ textDecoration: 'none' }}>
             <Text fontSize="2xl" fontWeight="bold">
               <Text as="span" color="yellow.300">Mis</Text> Noticias
             </Text>
@@ -121,10 +121,10 @@ const Header: React.FC = () => {
                   <DrawerHeader color={textColor}>Menú</DrawerHeader>
                   <DrawerBody>
                     <VStack spacing={4} align="stretch">
-                      <ChakraLink as={ReactRouterLink} to="/redactar" color={textColor} _hover={{ color: "yellow.300" }}>
+                      <ChakraLink as={ReactRouterLink} to="/misnoticias/redactar" color={textColor} _hover={{ color: "yellow.300" }}>
                         Subir nota
                       </ChakraLink>
-                      <ChakraLink as={ReactRouterLink} to="/" color={textColor} _hover={{ color: "yellow.300" }}>
+                      <ChakraLink as={ReactRouterLink} to="/misnoticias/notas" color={textColor} _hover={{ color: "yellow.300" }}>
                         Ver notas
                       </ChakraLink>
                       {renderAuthLinks()}
@@ -138,43 +138,40 @@ const Header: React.FC = () => {
             <Flex as="nav" align="center" ml="auto">
               <Flex as="ul" listStyleType="none" p={0} m={0} gap={4}>
                 <Box as="li">
-                  <ChakraLink as={ReactRouterLink} to="/" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
+                  <ChakraLink as={ReactRouterLink} to="/misnoticias/notas" color={textColor} _hover={{ color: "yellow.300", textDecoration: 'none' }}>
                     Ver notas
                   </ChakraLink>
                 </Box>
                 {renderAuthLinks()}
                 <Box as="li">
-                <ChakraLink as={ReactRouterLink} to="/buscar">
-          <IconButton 
-            aria-label="Buscar" 
-            icon={<SearchIcon />} 
-            size="sm" 
-            color={iconColor}
-            bg="transparent"
-            _hover={{ bg: "transparent", color: "yellow.300" }}
-          />
-        </ChakraLink>
-        </Box>
-        {filtersActive && 
-        <Box as="li">
-
-          <IconButton 
-            aria-label="Remover filtros" 
-            icon={<FaFilterCircleXmark />} 
-            size="sm" 
-            color={iconColor}
-            bg="transparent"
-            _hover={{ bg: "transparent", color: "yellow.300" }}
-            onClick={clearFilters} // Llamas a clearFilters aquí para limpiar los filtros
-          />
-        </Box>}
+                  <ChakraLink as={ReactRouterLink} to="/misnoticias/buscar">
+                    <IconButton 
+                      aria-label="Buscar" 
+                      icon={<SearchIcon />} 
+                      size="sm" 
+                      color={iconColor}
+                      bg="transparent"
+                      _hover={{ bg: "transparent", color: "yellow.300" }}
+                    />
+                  </ChakraLink>
+                </Box>
+                {filtersActive && 
+                  <Box as="li">
+                    <IconButton 
+                      aria-label="Remover filtros" 
+                      icon={<FaFilterCircleXmark />} 
+                      size="sm" 
+                      color={iconColor}
+                      bg="transparent"
+                      _hover={{ bg: "transparent", color: "yellow.300" }}
+                      onClick={clearFilters} 
+                    />
+                  </Box>
+                }
               </Flex>
             </Flex>
           )}
         </Flex>
-
-        {/* La lupa ahora está completamente a la derecha del Flex principal */}
-
       </Flex>
     </Box>
   );

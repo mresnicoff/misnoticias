@@ -7,14 +7,15 @@ import NoticiaDetalle from "../Components/NoticiaDetalle";
 import LoginForm from "../Components/LoginForm";
 import RegisterForm from "../Components/Registrarse";
 import Logout from "../Components/Logout";
-import  ProtectedRoute from"../Components/ProtectedRoute"
+import ProtectedRoute from "../Components/ProtectedRoute";
 import SearchForm from "../Components/SearchForm";
 import ForgotPasswordForm from "../Components/ForgotPassword";
 import ResetPasswordForm from "../Components/ResetPassword";
+import Error404 from "../Components/Error404";
 
 const routes: RouteObject[] = [
   {
-    path: "/",
+    path: "/misnoticias",
     element: <LayoutPublic />,
     children: [
       {
@@ -22,12 +23,11 @@ const routes: RouteObject[] = [
         element: <App />,
       },
       {
-        path: "misnoticias/notas",
+        path: "notas",
         element: <MostrarNotas />,
       },
-      // Envolvemos la ruta "redactar" con ProtectedRoute
       {
-        path: "/misnoticias/redactar",
+        path: "redactar",
         element: (
           <ProtectedRoute>
             <Form />
@@ -35,38 +35,40 @@ const routes: RouteObject[] = [
         ),
       },
       {
-        path: "/misnoticias/loguearse",
-        element: <LoginForm/>,
+        path: "loguearse",
+        element: <LoginForm />,
       },
       {
-        path: "/misnoticias/logout",
-        element: <Logout/>,
+        path: "logout",
+        element: <Logout />,
       },
       {
-        path: "/misnoticias/forgot-password",
-        element: <ForgotPasswordForm/>,
+        path: "forgot-password",
+        element: <ForgotPasswordForm />,
       },
       {
-      path: "/misnoticias/reset-password",
-      element: <ResetPasswordForm/>,
-    },
-      {
-        path: "/misnoticias/registrarse",
-        element: <RegisterForm/>,
+        path: "reset-password",
+        element: <ResetPasswordForm />,
       },
       {
-        path: "/misnoticias/noticia/:id",
+        path: "registrarse",
+        element: <RegisterForm />,
+      },
+      {
+        path: "noticia/:id",
         element: <NoticiaDetalle />,
       },
       {
-        path: "/misnoticias/buscar",
+        path: "buscar",
         element: <SearchForm />,
       },
+      {
+        path: "*",
+        element: <Error404 rutaNoEncontrada={window.location.pathname}/>,
+        errorElement: <Error404 rutaNoEncontrada={window.location.pathname} />,
+      },
     ],
-    
   },
 ];
 
 export const router = createBrowserRouter(routes);
-
-
