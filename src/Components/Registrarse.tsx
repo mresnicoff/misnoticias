@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState, useEffect } from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Box, 
@@ -10,9 +10,11 @@ import {
   Text, 
   useToast,
   useColorModeValue,
-  Switch
+  Switch,
+  Image // Para mostrar la imagen seleccionada
 } from '@chakra-ui/react';
 import axios from 'axios';
+import ImageUploading from 'react-images-uploading'; // Importa ImageUploading
 
 interface User {
   email: string;
@@ -23,16 +25,12 @@ interface User {
   puedeescribir: boolean;
   linkautor?: string;
 }
-
+interface ImageListType {
+  data_url: string;
+  // otras propiedades que podría tener la imagen
+}
 const RegisterForm: React.FC = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log("Hola")
-    if (e.target.files && e.target.files.length > 0) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [user, setUser] = useState<User>({
     email: '',
     avatar: '',
@@ -51,6 +49,19 @@ const RegisterForm: React.FC = () => {
   const textColor = useColorModeValue("gray.600", "gray.200");
   const btnColor = useColorModeValue("purple.500", "purple.600");
 
+  // Estado para manejar la imagen seleccionada
+  const [images, setImages] = useState<any[]>([]);
+
+  const onChange = (imageList: ImageListType[], addUpdatedIndex?: number[]) => {
+    // data for submit
+    setImages(imageList);
+    if(imageList.length > 0) {
+      setUser(prevState => ({ ...prevState, avatar: imageList[0].data_url }));
+    } else {
+      setUser(prevState => ({ ...prevState, avatar: '' }));
+    }
+  };
+
   const validateField = (name: string, value: string) => {
     let newErrors = { ...errors };
     
@@ -62,23 +73,23 @@ const RegisterForm: React.FC = () => {
         break;
       case 'avatar':
         if (!value || value.length === 0) {
-          newErrors.avatar = 'El avatar no puede quedar vacío';}
-        else delete newErrors.avatar;
+          newErrors.avatar = 'El avatar no puede quedar vacío';
+        } else delete newErrors.avatar;
         break;
-      case 'password':
-        if (value.trim() === '') newErrors.password = 'La contraseña no puede quedar vacía';
-        else if (value.length < 6) newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-        else delete newErrors.password;
-        break;
-      case 'repeatPassword':
-        if (value.trim() === '') newErrors.repeatPassword = 'Repetir contraseña no puede quedar vacío';
-        else if (value !== user.password) newErrors.repeatPassword = 'Las contraseñas no coinciden';
-        else delete newErrors.repeatPassword;
-        break;
-      case 'nombre':
-        if (value.trim() === '') newErrors.nombre = 'El nombre no puede quedar vacío';
-        else delete newErrors.nombre;
-        break;
+        case 'password':
+          if (value.trim() === '') newErrors.password = 'La contraseña no puede quedar vacía';
+          else if (value.length < 6) newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+          else delete newErrors.password;
+          break;
+        case 'repeatPassword':
+          if (value.trim() === '') newErrors.repeatPassword = 'Repetir contraseña no puede quedar vacío';
+          else if (value !== user.password) newErrors.repeatPassword = 'Las contraseñas no coinciden';
+          else delete newErrors.repeatPassword;
+          break;
+        case 'nombre':
+          if (value.trim() === '') newErrors.nombre = 'El nombre no puede quedar vacío';
+          else delete newErrors.nombre;
+          break;
     }
 
     setErrors(newErrors);
@@ -90,8 +101,6 @@ const RegisterForm: React.FC = () => {
       ...prevState,
       [name]: type === 'checkbox' ? checked : value
     }));
-
-    // Validate on change for real-time feedback
     validateField(name, type === 'checkbox' ? (checked ? 'true' : '') : value);
     setTouched(prev => ({ ...prev, [name]: true }));
   };
@@ -107,31 +116,9 @@ const RegisterForm: React.FC = () => {
     setIsLoading(true);
 
     let formIsValid = true;
-    const validationErrors = {};
-    const formData = new FormData();
-    if (selectedFile){
- 
-    formData.append('file', selectedFile);}
-    let avatarUrl = user.avatar;
-    try {
-      const response = await axios.post<{ url: string }>(apiUrl+'upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      avatarUrl=response.data.url
-      setUser(prevUser => ({
-        ...prevUser,
-        avatar: response.data.url 
-      }));
-    } catch (error) {
-      console.error('Error subiendo la imagen:', error);
-    }
-
-    // Validate all fields before submit
+    // Validar todos los campos antes de enviar
     Object.keys(user).forEach((field) => {
       if (field !== 'linkautor' && field !== 'puedeescribir') {
-    
         validateField(field, user[field as keyof User] as string);
         if (errors[field]) formIsValid = false;
       }
@@ -149,74 +136,71 @@ const RegisterForm: React.FC = () => {
       return;
     }
 
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
     try {
-      const response = await axios.post(apiUrl+'nuevousuario/', {
-        email: user.email,
-        avatar: avatarUrl,
-        password: user.password,
-        nombre: user.nombre, // Asegúrate de enviar 'nombre' al backend
-        puedeescribir: user.puedeescribir,
-        linkautor: user.linkautor || undefined
-      });
-       if (response.data.success) {
-        toast({
-          title: "Éxito",
-          description: "Registro exitoso.Redirigiendo al login",
-          status: "success",
-          duration: 1000,
-          isClosable: true,
+      // Subir la imagen a Cloudinary
+      const formData = new FormData();
+      if (images.length > 0) {
+        formData.append('file', images[0].file);
+        formData.append('upload_preset', uploadPreset);
+        
+        const cloudinaryResponse = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData);
+        
+        const avatarUrl = cloudinaryResponse.data.secure_url;
+        console.log(avatarUrl)
+        setUser(prevUser => ({ ...prevUser, avatar: avatarUrl }));
+
+        // Ahora puedes proceder con el registro usando el avatarUrl
+        const response = await axios.post(apiUrl+'nuevousuario/', {
+          email: user.email,
+          avatar: avatarUrl,
+          password: user.password,
+          nombre: user.nombre,
+          puedeescribir: user.puedeescribir,
+          linkautor: user.linkautor || undefined
         });
-        navigate('/loguearse');
-      } else {
-        toast({
-          title: "Error",
-          description: response.data.message || "No se pudo registrar el usuario.",
-          status: "error",
-          duration: 1000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-        if ((error as any).response) {
-          // Aquí asignamos el mensaje de error a la descripción de la notificación
+
+        if (response.data.success) {
           toast({
-            title: "Error",
-            description: (error as any).response.data.message || "Ocurrió un error inesperado.",
-            status: "error",
+            title: "Éxito",
+            description: "Registro exitoso. Redirigiendo al login",
+            status: "success",
             duration: 1000,
             isClosable: true,
           });
+          navigate('/loguearse');
         } else {
-          // Manejar otros tipos de errores
           toast({
             title: "Error",
-            description: "Hubo un problema con la solicitud.",
+            description: response.data.message || "No se pudo registrar el usuario.",
             status: "error",
             duration: 1000,
             isClosable: true,
           });
         }
-      
+      }
+    } catch (error) {
+      console.error('Error subiendo la imagen a Cloudinary:', error);
+      toast({
+        title: "Error",
+        description: "Error al subir la imagen. Inténtalo de nuevo.",
+        status: "error",
+        duration: 1000,
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Show error only if field has been touched
   const showError = (field: string) => touched[field] && errors[field];
 
   return (
-    <Box 
-      bg={bgColor} 
-      p={8} 
-      borderRadius="lg" 
-      boxShadow="lg" 
-      maxW="md" 
-      mx="auto" 
-      my={10}
-    >
+    <Box bg={bgColor} p={8} borderRadius="lg" boxShadow="lg" maxW="md" mx="auto" my={10}>
       <form onSubmit={handleSubmit}>
-      <VStack spacing={4} align="stretch" >
+        <VStack spacing={4} align="stretch">
         <FormControl id="nombre" isRequired isInvalid={!!showError('nombre')}>
           <FormLabel color={textColor}>Nombre</FormLabel>
           <Input 
@@ -241,18 +225,44 @@ const RegisterForm: React.FC = () => {
           />
           {showError('email') && <Text color="red.500" fontSize="sm">{errors.email}</Text>}
         </FormControl>
-        <FormControl id="avatar" isRequired isInvalid={!!showError('avatar')}>
-  <FormLabel color={textColor}>Imagen de Avatar</FormLabel>
-  <Input 
-    type="file" 
-    name="avatar" 
-    onChange={handleFileChange} // Usar handleFileChange aquí
-    onBlur={handleBlur}
-  />
-  {/* Mostrar el nombre del archivo o mensaje por defecto */}
-  {showError('avatar') && <Text color="red.500" fontSize="sm">{errors.avatar}</Text>}
-
-</FormControl>
+          <FormControl id="avatar" isRequired isInvalid={!!showError('avatar')}>
+            <FormLabel color={textColor}>Imagen de Avatar</FormLabel>
+            <ImageUploading
+              value={images}
+              onChange={onChange as any}
+              maxNumber={1}
+              dataURLKey="data_url"
+            >
+              {({
+                imageList,
+                onImageUpload,
+                onImageRemoveAll,
+                onImageUpdate,
+                onImageRemove,
+                isDragging,
+                dragProps,
+              }) => (
+                // write your building UI
+                <div className="upload__image-wrapper">
+                  <Button 
+                    colorScheme="purple" 
+                    onClick={onImageUpload}
+                    {...dragProps}
+                  >
+                    {imageList.length === 0 ? 'Subir Imagen' : 'Cambiar Imagen'}
+                  </Button>
+                  &nbsp;
+                  {imageList.map((image, index) => (
+                    <div key={index} className="image-item">
+                      <Image src={image['data_url']} alt="" width="100" />
+                      <Button onClick={() => onImageRemove(index)}>Eliminar</Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ImageUploading>
+            {showError('avatar') && <Text color="red.500" fontSize="sm">{errors.avatar}</Text>}
+          </FormControl>
         <FormControl id="password" isRequired isInvalid={!!showError('password')}>
           <FormLabel color={textColor}>Contraseña</FormLabel>
           <Input 

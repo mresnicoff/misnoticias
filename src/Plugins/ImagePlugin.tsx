@@ -6,8 +6,39 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { $createImageNode } from "../nodes/ImageNode";
 import { $insertNodes } from "lexical";
 import axios from "axios";
-
+import { ChangeEvent } from 'react'
+export interface CloudinaryResponse {
+  secure_url: string;
+}
 export default function ImagePlugin() {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('cloud_name', cloudName);
+  
+      try {
+        const response = await axios.post<CloudinaryResponse>(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          formData
+        );
+        
+        if (response.data && response.data.secure_url) {
+          console.log(response.data.secure_url);
+          // Asegúrate de que setURL esté tipado correctamente en tu componente
+          setURL(response.data.secure_url);
+        } else {
+          console.error('La respuesta de Cloudinary no contiene una URL segura.');
+        }
+      } catch (error) {
+        console.error('Error subiendo la imagen a Cloudinary:', error);
+      }
+    }
+  };
   const [isOpen, setIsOpen] = useState(false);
   const [url, setURL] = useState("");
   const [file, setFile] = useState<File>();
@@ -43,27 +74,7 @@ export default function ImagePlugin() {
         ref={inputRef}
         accept="image/*"
         style={{ display: "none" }}
-        onChange=  {async (e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-            try {
-              const response = await axios.post<{ url: string }>(apiUrl+'upload', formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                }
-              });
-              console.log(response.data.url)
-              setURL(response.data.url);
-        
-            } catch (error) {
-              console.error('Error subiendo la imagen:', error);
-            }
-
-          }
-          e.target.files = null;
-        }}
+        onChange={onChange}
       />
       {isOpen && (
         <Modal
